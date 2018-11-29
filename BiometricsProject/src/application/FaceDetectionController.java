@@ -41,7 +41,7 @@ public class FaceDetectionController {
 	private CascadeClassifier faceCascade;
 	private int absoluteFaceSize;
 
-	public void initialize() {
+	protected void initialize() {
 		this.capture = new VideoCapture();
 		this.faceCascade = new CascadeClassifier();
 		this.absoluteFaceSize = 0;
@@ -62,6 +62,8 @@ public class FaceDetectionController {
 			// is the video stream available?
 			if (this.capture.isOpened()) {
 				this.cameraActive = true;
+				this.faceCascade.load("resources/haarcascades/haarcascade_frontalface_alt.xml");
+				this.startButton.setDisable(true);
 
 				// grab a frame every 33 ms (30 frames/sec)
 				Runnable frameGrabber = new Runnable() {
@@ -102,7 +104,7 @@ public class FaceDetectionController {
 			try
 			{
 				// read the current frame
-				this.capture.read(frame);
+				this.detectAndDisplay(frame);
 				
 			}
 			catch (Exception e)
@@ -172,5 +174,8 @@ public class FaceDetectionController {
 		Utils.onFXThread(view.imageProperty(), image);
 	}
 	
-	
+	protected void setClosed()
+	{
+		this.stopAcquisition();
+	}
 }
