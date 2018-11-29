@@ -23,11 +23,11 @@ import javafx.scene.image.ImageView;
 
 public class FaceDetectionController {
 	@FXML
-	private Button startButton;
+	private Button start_btn;
 	@FXML
-	private Button takePictureButton;
+	private Button take_picture_btn;
 	@FXML
-	private ImageView currentFrame;
+	private ImageView current_frame;
 
 	// a timer for acquiring the video stream
 	private ScheduledExecutorService timer;
@@ -37,7 +37,7 @@ public class FaceDetectionController {
 	private boolean cameraActive = false;
 	// the id of the camera to be used
 	private static int cameraId = 0;
-	
+
 	private CascadeClassifier faceCascade;
 	private int absoluteFaceSize;
 
@@ -45,15 +45,15 @@ public class FaceDetectionController {
 		this.capture = new VideoCapture();
 		this.faceCascade = new CascadeClassifier();
 		this.absoluteFaceSize = 0;
-		
-		this.capture = new VideoCapture();
+
+		current_frame.setFitWidth(600);
 		this.cameraActive = false;
+		
+		this.faceCascade.load("resources/haarcascades/haarcascade_frontalface_alt.xml");
 	}
 
 	@FXML
 	protected void startCamera(ActionEvent event) {
-		this.currentFrame.setFitWidth(600);
-		this.currentFrame.setPreserveRatio(true);
 
 		if (!this.cameraActive) {
 			// start the video capture
@@ -61,9 +61,8 @@ public class FaceDetectionController {
 
 			// is the video stream available?
 			if (this.capture.isOpened()) {
+
 				this.cameraActive = true;
-				this.faceCascade.load("resources/haarcascades/haarcascade_frontalface_alt.xml");
-				this.startButton.setDisable(true);
 
 				// grab a frame every 33 ms (30 frames/sec)
 				Runnable frameGrabber = new Runnable() {
@@ -74,7 +73,7 @@ public class FaceDetectionController {
 						Mat frame = grabFrame();
 						// convert and show the frame
 						Image imageToShow = Utils.mat2Image(frame);
-						updateImageView(currentFrame, imageToShow);
+						updateImageView(current_frame, imageToShow);
 					}
 				};
 
@@ -92,90 +91,81 @@ public class FaceDetectionController {
 			this.stopAcquisition();
 		}
 	}
-	
-	private Mat grabFrame()
-	{
+
+	private Mat grabFrame() {
 		// init everything
 		Mat frame = new Mat();
-		
+
 		// check if the capture is open
-		if (this.capture.isOpened())
-		{
-			try
-			{
-				// read the current frame
-				this.detectAndDisplay(frame);
-				
-			}
-			catch (Exception e)
-			{
+		if (this.capture.isOpened()) {
+			try {
+				this.capture.read(frame);
+
+				// if the frame is not empty, process it
+				if (!frame.empty()) {
+					// face detection
+					this.detectAndDisplay(frame);
+				}
+
+			} catch (Exception e) {
 				// log the error
 				System.err.println("Exception during the image elaboration: " + e);
 			}
 		}
 		return frame;
 	}
-	
-	private void detectAndDisplay(Mat frame)
-	{
+
+	private void detectAndDisplay(Mat frame) {
 		MatOfRect faces = new MatOfRect();
 		Mat grayFrame = new Mat();
-		
+
 		// convert the frame in gray scale
 		Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-		
+		// equalize the frame histogram to improve the result
+		Imgproc.equalizeHist(grayFrame, grayFrame);
+
 		// compute minimum face size (20% of the frame height, in our case)
-		if (this.absoluteFaceSize == 0)
-		{
+		if (this.absoluteFaceSize == 0) {
 			int height = grayFrame.rows();
-			if (Math.round(height * 0.2f) > 0)
-			{
+			if (Math.round(height * 0.2f) > 0) {
 				this.absoluteFaceSize = Math.round(height * 0.2f);
 			}
 		}
-		
+
 		// detect faces
 		this.faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE,
 				new Size(this.absoluteFaceSize, this.absoluteFaceSize), new Size());
-				
+
 		// each rectangle in faces is a face: draw them!
 		Rect[] facesArray = faces.toArray();
 		for (int i = 0; i < facesArray.length; i++)
 			Imgproc.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0), 3);
-			
+
 	}
-	
-	private void stopAcquisition()
-	{
-		if (this.timer!=null && !this.timer.isShutdown())
-		{
-			try
-			{
+
+	private void stopAcquisition() {
+		if (this.timer != null && !this.timer.isShutdown()) {
+			try {
 				// stop the timer
 				this.timer.shutdown();
 				this.timer.awaitTermination(33, TimeUnit.MILLISECONDS);
-			}
-			catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				// log any exception
 				System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
 			}
 		}
-		
-		if (this.capture.isOpened())
-		{
+
+		if (this.capture.isOpened()) {
 			// release the camera
 			this.capture.release();
 		}
 	}
-	
-	private void updateImageView(ImageView view, Image image)
-	{
+
+	private void updateImageView(ImageView view, Image image) {
 		Utils.onFXThread(view.imageProperty(), image);
 	}
-	
-	protected void setClosed()
-	{
+
+	protected void setClosed() {
 		this.stopAcquisition();
 	}
 }
