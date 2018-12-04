@@ -1,4 +1,4 @@
-package application;
+package application.FaceDetection;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,7 +41,7 @@ public class FaceDetectionController {
 	private CascadeClassifier faceCascade;
 	private int absoluteFaceSize;
 
-	protected void initialize() {
+	public void initialize() {
 		this.capture = new VideoCapture();
 		this.faceCascade = new CascadeClassifier();
 		this.absoluteFaceSize = 0;
@@ -165,7 +165,7 @@ public class FaceDetectionController {
 		Utils.onFXThread(view.imageProperty(), image);
 	}
 
-	protected void setClosed() {
+	public void setClosed() {
 		this.stopAcquisition();
 	}
 }

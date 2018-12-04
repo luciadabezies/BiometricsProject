@@ -2,7 +2,7 @@ package application;
 	
 import org.opencv.core.Core;
 
-import application.FaceDetectionController;
+import application.FaceDetection.FaceDetectionController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
