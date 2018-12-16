@@ -67,6 +67,7 @@ public class RegisterUserController {
 			for (int i = 0; i < imagesPathsList.size(); i++) {
 				new Driver().insertUser(nameTxt.getText(), emailTxt.getText(), imagesPathsList.get(i));
 			}
+			imagesPathsList.removeAll(imagesPathsList);
 
 		} else {
 			setLabels();
