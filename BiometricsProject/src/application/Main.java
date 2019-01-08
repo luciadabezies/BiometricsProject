@@ -2,14 +2,13 @@ package application;
 	
 import org.opencv.core.Core;
 
-import application.FaceDetection.FaceDetectionController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
+
+import database.Driver;
 
 public class Main extends Application {
 	@Override
@@ -17,23 +16,25 @@ public class Main extends Application {
 
 		try
 		{
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("FaceDetection.fxml"));
-			Pane root = (Pane) loader.load();
-			root.setStyle("-fx-background-color: whitesmoke;");
-			Scene scene = new Scene(root, 800, 600);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setTitle("Face Detection");
-			primaryStage.setScene(scene);
-			primaryStage.show();
+			FXMLLoader mainWindowLoader = new FXMLLoader(Main.class.getResource("../application/MainWindow.fxml"));
+			Pane mainWindowPane = (Pane) mainWindowLoader.load();
+			mainWindowPane.setStyle("-fx-background-color: whitesmoke;");
+			Scene mainWindowScene = new Scene(mainWindowPane, 800, 600);
+			mainWindowScene.getStylesheets().add(getClass().getResource("../application/application.css").toExternalForm());
+	        primaryStage.setTitle("Main window");
+	        primaryStage.setScene(mainWindowScene);
+	        primaryStage.show();
 			
-			FaceDetectionController controller = loader.getController();
-			controller.initialize();
+			
+			
+			/*FaceDetectionController faceDetectionController = faceDetectionLoader.getController();
+			faceDetectionController.initialize();
 			primaryStage.setOnCloseRequest((new EventHandler<WindowEvent>() {
 				public void handle(WindowEvent we)
 				{
-					controller.setClosed();
+					faceDetectionController.setClosed();
 				}
-			}));
+			}));*/
 		}
 		catch (Exception e)
 		{
@@ -43,6 +44,9 @@ public class Main extends Application {
 	
 	public static void main(String[] args)
 	{
+		//initialize database
+		new Driver().initialize();
+		
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		

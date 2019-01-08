@@ -1,4 +1,4 @@
-package application.FaceDetection;
+package faceRecognition;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,7 +49,7 @@ public class FaceDetectionController {
 		current_frame.setFitWidth(600);
 		this.cameraActive = false;
 		
-		this.faceCascade.load("resources/haarcascades/haarcascade_frontalface_alt.xml");
+		this.faceCascade.load("resources/faceRecognition/haarcascades/haarcascade_frontalface_alt.xml");
 	}
 
 	@FXML
@@ -93,7 +93,7 @@ public class FaceDetectionController {
 	}
 
 	private Mat grabFrame() {
-		// init everything
+		// initialize everything
 		Mat frame = new Mat();
 
 		// check if the capture is open
@@ -124,7 +124,7 @@ public class FaceDetectionController {
 		// equalize the frame histogram to improve the result
 		Imgproc.equalizeHist(grayFrame, grayFrame);
 
-		// compute minimum face size (20% of the frame height, in our case)
+		// compute minimum face size (20% of the frame height)
 		if (this.absoluteFaceSize == 0) {
 			int height = grayFrame.rows();
 			if (Math.round(height * 0.2f) > 0) {
@@ -136,11 +136,10 @@ public class FaceDetectionController {
 		this.faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE,
 				new Size(this.absoluteFaceSize, this.absoluteFaceSize), new Size());
 
-		// each rectangle in faces is a face: draw them!
+		// draw rectangles in faces
 		Rect[] facesArray = faces.toArray();
 		for (int i = 0; i < facesArray.length; i++)
-			Imgproc.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0), 3);
-
+			Imgproc.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(225, 105, 65), 3); //red y blue cambiados
 	}
 
 	private void stopAcquisition() {

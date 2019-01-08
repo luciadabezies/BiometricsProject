@@ -1,4 +1,4 @@
-package dataAccess;
+package database;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,8 @@ public class Driver {
 	Properties properties = new Properties();
 
 	String connectionURL = "jdbc:mysql://localhost:3306/";
+	
+	public Driver() {}
 
 	public void initialize() {
 
@@ -112,5 +114,6 @@ public class Driver {
 			e.printStackTrace();
 		}
 	}
+
 
 }

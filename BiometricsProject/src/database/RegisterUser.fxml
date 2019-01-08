@@ -7,7 +7,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="709.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userRegistration.RegisterUserController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+			prefHeight="485.0" prefWidth="709.0" xmlns="http://javafx.com/javafx/8.0.171" 
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="database.RegisterUserController">
    <children>
       <Label fx:id="nameLbl" layoutX="29.0" layoutY="52.0" text="Name" />
       <TextField fx:id="nameTxt" layoutX="86.0" layoutY="47.0" />

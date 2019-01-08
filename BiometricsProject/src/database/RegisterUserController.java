@@ -1,10 +1,10 @@
-package userRegistration;
+package database;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import dataAccess.Driver;
+import database.Driver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -103,6 +103,5 @@ public class RegisterUserController {
 		if (!validImg())
 			imgErrorLbl.setText("Please select image(s)");
 	}
-
 
 }
